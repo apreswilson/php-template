@@ -19,6 +19,7 @@ class Database
         );
     }
 
+
     public function query(string $sql): array
     {
         $stmt = $this->pdo->query($sql);
