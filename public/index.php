@@ -1,9 +1,13 @@
 <?php
+// Load vars
+require_once __DIR__ . '/../src/loadvars.php';
+
+// Connect to DB
 require __DIR__ . '/../src/database.php';
+$db = Database::getInstance();
 
-$db = new Database();
+$params = ["completed" => false];
+var_dump($params);
 
-print_r($db->query("SELECT * FROM todos"));
-
-echo "Connected!";
+$query = Database::query('SELECT * FROM todos WHERE completed = :completed', ["completed" => false]);
 ?>
