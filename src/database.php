@@ -51,29 +51,34 @@ class Database
      *
      * @return array The query results as an associative array.
      */
-    public static function query(string $sql, array $params = []): array {
-        $db = self::getInstance();
+    public static function query(string $sql, array $params = []): array | null {
+        try {
+            $db = self::getInstance();
 
-        $statement = $db->pdo->prepare($sql);
+            $statement = $db->pdo->prepare($sql);
 
-        // Need to bind param values to send stuff like bool over the wire since executes default binding wasn't working for me.
-        foreach($params as $param_name => $param_value) {
-            $type = gettype($param_value);
+            // Need to bind param values to send stuff like bool over the wire since executes default binding wasn't working for me.
+            foreach($params as $param_name => $param_value) {
+                $type = gettype($param_value);
 
-            switch($type) {
-                case "boolean":
-                   $statement->bindValue(':' . $param_name, $param_value, PDO::PARAM_BOOL);
-                   break; 
-                case "integer":
-                   $statement->bindValue(':' . $param_name, $param_value, PDO::PARAM_INT);
-                   break;
-                default:
-                   $statement->bindValue(':' . $param_name, $param_value, PDO::PARAM_STR);
+                switch($type) {
+                    case "boolean":
+                    $statement->bindValue(':' . $param_value, $param_value, PDO::PARAM_BOOL);
+                    break; 
+                    case "integer":
+                    $statement->bindValue(':' . $param_name, $param_value, PDO::PARAM_INT);
+                    break;
+                    default:
+                    $statement->bindValue(':' . $param_name, $param_value, PDO::PARAM_STR);
+                }
             }
+
+            $statement->execute();
+
+            return $statement->fetchAll();
+        } catch (PDOException $e) {
+            echo new Error($e);
+            return null;
         }
-
-        $statement->execute();
-
-        return $statement->fetchAll();
     }
 };
