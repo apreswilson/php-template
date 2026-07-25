@@ -27,6 +27,15 @@ class Database
     }
 
     public static function query(string $sql, array $params = []): array | null {
+        $sql = ltrim($sql);
+
+        if (
+            preg_match('/^(INSERT|UPDATE|DELETE|MERGE)\b/i', $sql)
+            && !str_contains(strtoupper($sql), 'RETURNING')
+        ) {
+            $sql = rtrim($sql) . "\nRETURNING *";
+        }
+
         try {
             $db = self::getInstance();
 

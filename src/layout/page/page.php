@@ -1,5 +1,5 @@
 <?php
-    /** @var string $page */
+    /** @var array $page */
     /** @var string $route */
 
     // Workaround for trying to get css before the actual page.php content is rendered.
@@ -12,14 +12,13 @@
 <html>
     <head>
 
-    <?php
-        foreach (Page::getAssetsByType('css') as $css) {
-            $url = $css . "&page=$route";
-            echo "<link rel=\"stylesheet\" href=\"$url\"></link>";
-        }
-    ?>
+    <!-- Load CSS files -->
+    <?php Page::renderStyles($route) ?>
 
+    <!-- Import jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     </head>
+
     <body>
         <?php 
             require_once __DIR__ . '/../header/header.php';
@@ -28,10 +27,8 @@
         ?>
     </body>
 
-    <?php
-        foreach (Page::getAssetsByType('js') as $js) {
-            $url = $js . "&page=$route";
-            echo "<script src=\"$url\"></script>";
-        }
-    ?>
+    <!-- Load JS files -->
+    <script src="/assets/API.js"></script>
+    <script src="/assets/events.js"></script>
+    <?php Page::renderScripts($route) ?>
 </html>
