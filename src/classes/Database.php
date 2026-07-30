@@ -8,7 +8,7 @@ class Database
 
     private function __construct() {
         $this->pdo = new PDO(
-            "pgsql:host=" . $_ENV['host'] . ";port=" . $_ENV['port']. ";dbname=" . $_ENV['db'],
+            $_ENV['db_type'] . ":host=" . $_ENV['host'] . ";port=" . $_ENV['port']. ";dbname=" . $_ENV['db'],
             $_ENV['username'],
             null,
             [

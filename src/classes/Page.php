@@ -1,24 +1,32 @@
 <?php
 
 class Page {
-    private static array $assets = [
-        "js"         => [],
-        "css"        => [],
-        "components" => [],
-        "images"     => [],
-        "other"      => [],
-    ];
+    private static array $assets = [];
 
-    public static function loadAssets(array $directories, ?string $component = null): void {
-        // Create component child array if it doesn't exist yet
-        if ($component !== null && !isset(self::$assets['components'][$component])) {
-            self::$assets['components'][$component] = [
-                "js" => [],
-                "css" => []
-            ];
-        }
-
+    public static function loadAssets(array $directories): void {
         foreach ($directories as $directory) {
+            // Parse directory info
+            $directory  = realpath($directory);
+            $parts      = explode('/', $directory);
+            $dir_type   = [
+                "type" => $parts[count($parts) - 2], // What type of directory is it? 
+                "name" => $parts[count($parts) - 1] // What is the name of the directory?
+            ];
+
+            // Does a component array exist in assets? If not create it.
+            if (!isset(self::$assets[$dir_type['type']])) {
+                self::$assets[$dir_type['type']] = [];
+            }
+
+            // Does component element exist inside components array? If not create it.
+            if(!isset(self::$assets[$dir_type['type']][$dir_type['name']])) {
+                self::$assets[$dir_type['type']][$dir_type['name']]  = [
+                    "js"  => [],
+                    "css" => []
+                ];
+            }
+
+            // Get each file
             $files = scandir($directory);
             
             foreach ($files as $file) {
@@ -27,90 +35,54 @@ class Page {
                     continue;
                 }
 
-                // Parse extension and load it to assets based on file type
-                $extension = pathinfo($file, PATHINFO_EXTENSION);
-                switch ($extension) {
-                    case 'js':
-                        if ($component !== null) {
-                            self::$assets['components'][$component]['js'][] = self::formatFilePath($file, $component);
-                        }
-                        else {
-                            self::$assets['js'][] = self::formatFilePath($file);
-                        }
-                        break;
-                    case 'css':
-                        if ($component !== null) {
-                            self::$assets['components'][$component]['css'][] = self::formatFilePath($file, $component);
-                        }
-                        else {
-                            self::$assets['css'][] = self::formatFilePath($file);
-                        }
-                        break;
-                }
+                // Parse extension and load it to assets based dir_type
+                self::addRegistryFile($dir_type['type'], $dir_type['name'], $file);
             }
         } 
     }
 
-    public static function getAssetsByType(string $type): array | null{ 
-       switch ($type) {
-           case 'js':
-               return self::$assets['js'];
-           case 'css':
-               return self::$assets['css'];
-            default:
-                return null;
-       } 
+    public static function importAssets(string $type): void {
+        self::renderAssets(self::$assets, $type);
     }
 
-    public static function getComponentAssets(string $component): array {
-        return self::$assets['components'][$component] ?? [
-            "js"  => [],
-            "css" => [],
-        ];
-    }
 
-    public static function getComponentAssetsByType(string $type): array {
-        $assets = [];
+    private static function renderAssets(array $assets, string $type): void {
+        foreach ($assets as $key => $value) {
 
-        foreach(self::$assets['components'] as $component) {
-            if (isset($component[$type])) {
-                $assets = array_merge($assets, $component[$type]);
+            if (is_array($value)) {
+                self::renderAssets($value, $type);
+                continue;
+            }
+
+            if (!str_ends_with($key, ".$type")) {
+                continue;
+            }
+
+            if ($type === 'css') {
+                echo "<link rel=\"stylesheet\" href=\"$value\">";
+            }
+
+            if ($type === 'js') {
+                echo "<script src=\"$value\"></script>";
             }
         }
-        return $assets;
     }
 
-    public static function renderStyles(string $route) {
-        foreach (Page::getAssetsByType('css') as $css) {
-            $url = $css . "&page=$route";
-            echo "<link rel=\"stylesheet\" href=\"$url\"></link>";
+    private static function addRegistryFile(string $type, string $name, string $file): void {
+        $extension = pathinfo($file, PATHINFO_EXTENSION);
+
+        if (!in_array($extension, ['js', 'css'])) {
+            return;
         }
 
-        foreach (Page::getComponentAssetsByType('css') as $css) {
-            echo "<link rel=\"stylesheet\" href=\"$css\">";
-        }
-    }
-
-    public static function renderScripts(string $route) {
-        foreach (Page::getAssetsByType('js') as $js) {
-            $url = $js . "&page=$route";
-            echo "<script src=\"$url\"></script>";
+        if (isset(self::$assets[$type][$name][$extension][$file])) {
+            return;
         }
 
-        foreach (Page::getComponentAssetsByType('js') as $js) {
-            echo "<script src=\"$js\"></script>";
-        }
-    }
-
-    private static function formatFilePath(string $file, ?string $component = null): string {
-        $params = [
-            "file" => $file
-        ];
-
-        if ($component !== null) {
-            $params['component'] = $component;
-        }
-
-        return '/asset.php?' . http_build_query($params);
+        self::$assets[$type][$name][$extension][$file] = '/asset.php?' . http_build_query([
+            "file" => $file,
+            "type" => $type,
+            "name" => $name
+        ]);
     }
 }

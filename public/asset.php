@@ -1,11 +1,6 @@
 <?php
 // This is just a helper file for fetching static assets so we can keep all php, js, and css files inside same page folder.
-$file      = $_GET['file'];
-$page      = $_GET['page'] ?? null;
-$component = $_GET['component'] ?? null;
-$file_path = $component 
-                ? __DIR__ . '/../src/components/' . $component . '/' . $file
-                : __DIR__ . '/../src/pages/' . $page . '/' . $file;
+$file_path = __DIR__ . '/../src/' . $_GET['type'] . '/' . $_GET['name'] . '/' . $_GET['file'];
 
 if (!file_exists($file_path)) {
     http_response_code(404);

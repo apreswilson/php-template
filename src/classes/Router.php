@@ -41,12 +41,11 @@ class Router {
 
     private static function post(string $url, array $payload): RouterResponse {
         [$route, $query_params] = explode('?', $url);
-        echo $query_params;
         $route                  = trim($route, '/');
-        // $controller             = __DIR__ . "/../../src/pages/$route/controller.php";
         parse_str($query_params, $props);
+
         $function   = $props['action'];
-        $component  = $props['component'] ?? null; // This is only included in queries
+        $component  = $props['component'] ?? null;
         $controller = __DIR__ . "/../../src/" .
                     ($component !== null ? 'components/' : 'pages/') .
                     ($component !== null ? $component : $route) .
@@ -54,6 +53,8 @@ class Router {
 
         require_once $controller;
 
+        // All page controller.php files must have a Pages\ namespace
+        // All component controller.php files must have a Components\ namespace
         $namespace = ($component !== null ? 'Components\\' : 'Pages\\' ) . 
                     ($component !== null ? ucfirst($component) : ucfirst($route));
         $callable  = strtolower($namespace . '\\' . $function);

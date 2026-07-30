@@ -1,0 +1,54 @@
+.reaction-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.reaction {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 6px 6px 14px;
+}
+
+.reaction button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: var(--ink);
+    border: none;
+    padding: 4px 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.reaction button:hover {
+    background: transparent;
+    color: var(--accent-warm);
+}
+
+.reaction button:active {
+    transform: scale(0.96);
+}
+
+.reaction-icon {
+    color: var(--accent-warm);
+}
+
+.reaction-count {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: var(--bg);
+    border-radius: 999px;
+    padding: 4px 10px;
+    color: var(--ink);
+    min-width: 20px;
+    text-align: center;
+}

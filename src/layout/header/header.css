@@ -1,0 +1,31 @@
+.site-header {
+    background: #16233a;
+    border-bottom: 1px solid #2a3a56;
+}
+
+.site-header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-logo {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.site-nav a {
+    color: #c7cdd6;
+    text-decoration: none;
+    font-size: 14px;
+    margin-left: 20px;
+}
+
+.site-nav a:hover {
+    color: #ffffff;
+}

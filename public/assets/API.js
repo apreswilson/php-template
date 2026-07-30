@@ -12,7 +12,7 @@ class API {
             action,
             element,
 
-            send(payload = {}) {
+            post(payload = {}) {
                 return $.ajax({
                     type        : "POST",
                     url         : `${window.location.href}?action=${action}${component ? `&component=${component}` : ``}`,
