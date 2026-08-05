@@ -8,36 +8,35 @@
         });
     }
 
-    function refresh() {
-        $('[data-action="loadMessages"]').trigger('click');
+    async function loadMessages() {
+        const messages = await API.post(`loadMessages`);
+        renderMessages(messages);
     }
 
-    API.register(`createExampleTable`, async (context) => {
-        await context.post();
+    $(`[data-action="createExampleTable"]`).on(`click`, async () => {
+        await API.post(`createExampleTable`);
     });
 
-    API.register(`loadMessages`, async (context) => {
-        const messages = await context.post();
-        renderMessages(messages);
+    $(`[data-action="loadMessages"]`).on(`click`, async () => {
+        await loadMessages();
     });
 
-    API.register(`addMessage`, async (context) => {
+    $(`[data-action="addMessage"]`).on(`click`, async () => {
         const body = $('#example-message-input').val();
-        await context.post({ body });
+        await API.post(`addMessage`, { body });
         $('#example-message-input').val('');
-        refresh();
+        await loadMessages();
     });
 
-    API.register(`togglePinMessage`, async (context) => {
+    $(`[data-action="togglePinMessage"]`).on(`click`, async () => {
         const firstId = $('#example-message-list li').first().data('id');
-        await context.post({ id: firstId });
-        refresh();
+        await API.post(`togglePinMessage`, { id: firstId });
+        await loadMessages();
     });
 
-    API.register(`deleteMessage`, async (context) => {
+    $(`[data-action="deleteMessage"]`).on(`click`, async () => {
         const firstId = $('#example-message-list li').first().data('id');
-        await context.post({ id: firstId });
-        refresh();
+        await API.post(`deleteMessage`, { id: firstId });
+        await loadMessages();
     });
-
-})();
+})()

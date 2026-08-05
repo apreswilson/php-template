@@ -1,0 +1,33 @@
+.intro {
+    text-align: center;
+    margin: 30dvh 0;
+}
+
+.intro-eyebrow {
+    font-size: 3rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #5b6b82;
+    margin: 0 0 12px;
+}
+
+.intro-message {
+    margin: 0;
+}
+
+.intro-message a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.intro-features {
+    list-style: none;
+    margin: 24px 0 0;
+    padding: 0;
+    font-size: 14px;
+    color: #5b6b82;
+}
+
+.intro-features li {
+    margin-top: 8px;
+}

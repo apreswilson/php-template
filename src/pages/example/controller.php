@@ -4,6 +4,14 @@ namespace Pages\Example;
 
 use Database;
 
+const ALLOWED_ACTIONS = [
+    'createExampleTable',
+    'loadMessages',
+    'addMessage',
+    'togglePinMessage',
+    'deleteMessage',
+];
+
 function createExampleTable() {
     return Database::query("
         CREATE TABLE IF NOT EXISTS example_messages (

@@ -1,7 +1,7 @@
-(function (API, $) {
-    API.register(`incrementReaction`, async (context) => {
-        const reactionId = $(context.element).data('reaction-id');
-        const result = await context.post({ reactionId });
+(function () {
+    $(`[data-action="incrementReaction"]`).on(`click`, async function () {
+        const reactionId = $(this).data('reaction-id');
+        const result = await API.post(`incrementReaction`, { reactionId }, `reaction`);
         $(`.reaction[data-reaction-id="${reactionId}"] .reaction-count`).text(result.count);
     });
-})(window.API, jQuery);
+})();

@@ -5,6 +5,11 @@ class Page {
 
     public static function loadAssets(array $directories): void {
         foreach ($directories as $directory) {
+
+            if ($directory === false) {
+                continue;
+            }
+
             // Parse directory info
             $directory  = realpath($directory);
             $parts      = explode('/', $directory);
@@ -58,12 +63,13 @@ class Page {
                 continue;
             }
 
+
             if ($type === 'css') {
-                echo "<link rel=\"stylesheet\" href=\"$value\">";
+                echo "<link rel=\"stylesheet\" href=\"" . htmlspecialchars($value, ENT_QUOTES) . "\">";
             }
 
             if ($type === 'js') {
-                echo "<script src=\"$value\"></script>";
+                echo "<script src=\"" . htmlspecialchars($value, ENT_QUOTES) . "\"></script>";
             }
         }
     }

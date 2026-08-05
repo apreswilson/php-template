@@ -1,6 +1,4 @@
 <?php
-// This page is just a vibe coded walkthrough of understanding how the framework works since I was too lazy to do it myself.
-
 Page::loadAssets([
     __DIR__,
 ]);

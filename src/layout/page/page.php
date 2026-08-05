@@ -9,12 +9,13 @@ require $page;
 $content = ob_get_clean();
 
 // Load layout components
-// Todo: Maybe just strip the page.php after the last / and just have it automatically include the directory
+// Todo: Maybe just strip the page.php after the last / from $page and just have it automatically include the directory
 // so that not every page.php needs to call page::loadAssets redundantly on its own directory.
 // I'm undecided on this for now though so I'm leaving it for now.
 Page::loadAssets([
     __DIR__ . '/../header',
-    __DIR__ . '/../footer'
+    __DIR__ . '/../footer',
+    __DIR__
 ]);
 ?>
 
@@ -39,7 +40,6 @@ require_once __DIR__ . '/../footer/footer.php';
 ?>
 
 <script src="/assets/API.js"></script>
-<script src="/assets/events.js"></script>
 
 <?php Page::importAssets('js'); ?>
 

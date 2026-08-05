@@ -7,15 +7,20 @@ class Database
     private PDO $pdo;
 
     private function __construct() {
-        $this->pdo = new PDO(
-            $_ENV['db_type'] . ":host=" . $_ENV['host'] . ";port=" . $_ENV['port']. ";dbname=" . $_ENV['db'],
-            $_ENV['username'],
-            null,
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            ]
-        );
+        try {
+            $this->pdo = new PDO(
+                $_ENV['db_type'] . ":host=" . $_ENV['host'] . ";port=" . $_ENV['port']. ";dbname=" . $_ENV['db'],
+                $_ENV['username'],
+                $_ENV['password'],
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                ]
+            );
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return null;
+        }
     }
 
     public static function getInstance() : Database {
@@ -41,7 +46,6 @@ class Database
 
             $statement = $db->pdo->prepare($sql);
 
-            // Need to bind param values to send stuff like bool over the wire since PDO API isn't a fan of sending raw bool types.
             foreach($params as $param_name => $param_value) {
                 $type = gettype($param_value);
 
@@ -52,6 +56,9 @@ class Database
                     case "integer":
                         $statement->bindValue(':' . $param_name, $param_value, PDO::PARAM_INT);
                         break;
+                    case "NULL":
+                        $statement->bindValue(':' . $param_name, $param_value, PDO::PARAM_NULL);
+                        break;
                     default:
                         $statement->bindValue(':' . $param_name, $param_value, PDO::PARAM_STR);
                 }
@@ -61,7 +68,7 @@ class Database
 
             return $statement->fetchAll();
         } catch (PDOException $e) {
-            echo new Error($e);
+            error_log($e->getMessage());
             return null;
         }
     }

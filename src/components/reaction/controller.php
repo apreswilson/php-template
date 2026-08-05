@@ -4,6 +4,10 @@ namespace Components\Reaction;
 
 use Database;
 
+const ALLOWED_ACTIONS = [
+    'incrementReaction',
+];
+
 function incrementReaction(string $reactionId) {
     Database::query("
         CREATE TABLE IF NOT EXISTS example_reactions (
