@@ -89,11 +89,12 @@ A page's `.js` and `.css` files sit right next to `page.php` and
 `Page::loadAssets([__DIR__])` is called from `page.php`. There's no manual
 `<script src="...">` — the layout emits the tag for you.
 
-The JS typically wires DOM elements (often marked with `data-action`) to
-`API.post()` calls that match the controller's `ALLOWED_ACTIONS`:
+The JS typically wires DOM elements — bound however you'd normally do it in
+jQuery, no special attribute required — to `API.post()` calls that match the
+controller's `ALLOWED_ACTIONS`:
 
 ```js
-$(`[data-action="addMessage"]`).on('click', async () => {
+$('#add-message-btn').on('click', async () => {
     const body = $('#example-message-input').val();
     await API.post('addMessage', { body });
 });
@@ -113,8 +114,8 @@ GET/POST cycle in one place:
 - `controller.php` defines `createExampleTable`, `loadMessages`,
   `addMessage`, `togglePinMessage`, and `deleteMessage` — a full CRUD set
   against a `example_messages` table.
-- `example.js` binds each button's `data-action` to the matching
-  `API.post()` call and re-renders the message list after each mutation.
+- `example.js` binds each button to its matching `API.post()` call and
+  re-renders the message list after each mutation.
 
 Reading through those three files together is the fastest way to understand
 how a page fits together.

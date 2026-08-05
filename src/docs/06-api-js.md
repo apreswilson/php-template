@@ -72,6 +72,10 @@ posting to a different path yourself, bypassing `API.post`).
 
 ## Typical pattern in a page or component script
 
+`API` has no opinion about how you trigger a call — there's no attribute or
+selector convention baked into `API.js` itself. Bind it to whatever DOM
+elements you like, however you normally would with jQuery:
+
 ```js
 (function () {
     async function loadMessages() {
@@ -79,9 +83,9 @@ posting to a different path yourself, bypassing `API.post`).
         // render messages into the DOM
     }
 
-    $('[data-action="loadMessages"]').on('click', loadMessages);
+    $('#load-messages-btn').on('click', loadMessages);
 
-    $('[data-action="addMessage"]').on('click', async () => {
+    $('#add-message-btn').on('click', async () => {
         const body = $('#example-message-input').val();
         await API.post('addMessage', { body });
         await loadMessages();
@@ -89,10 +93,14 @@ posting to a different path yourself, bypassing `API.post`).
 })();
 ```
 
-The `data-action` attribute is just a convention used throughout the
-framework's own pages/components to line up a DOM element with the action
-name it triggers — `API.js` itself doesn't read `data-action`; your own
-script wires the two together, as shown above.
+Older examples in this codebase wire buttons up using a `data-action`
+attribute (e.g. `$('[data-action="addMessage"]')`) whose value happens to
+match the action name. That was never something `API.js` reads or requires
+— it's legacy from an earlier pattern, not a framework convention. Any
+selector (`id`, `class`, `data-*`, whatever fits your markup) works exactly
+the same. Don't take `data-action` as the "correct" way to bind buttons if
+you see it in older pages/components — it's just one option, no longer the
+recommended one.
 
 > **Note:** the framework's own comments flag that always posting to
 > `window.location.href` and passing `component` as a separate string is a

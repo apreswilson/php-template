@@ -65,6 +65,12 @@ A component can do anything a page's view can — including running its own
 database queries directly, as `reaction`'s `component.php` does to read its
 initial count before rendering.
 
+The `data-action`/`data-component` attributes on the button above are just
+plain HTML attributes this particular markup happens to use as jQuery
+selector hooks in `reaction.js` — they carry no special meaning to
+`Component`, `Page`, or `API`. Use whatever attributes or selectors make
+sense for your own markup; nothing in the framework requires this pattern.
+
 ## `controller.php` — component-scoped actions
 
 Same shape as a page controller, but the namespace is
@@ -96,7 +102,9 @@ function incrementReaction(string $reactionId) {
 ```
 
 To call a component action from JS, pass the component name as the third
-argument to `API.post()`:
+argument to `API.post()`. Bind it to whatever selector fits your markup —
+here the existing `[data-action="incrementReaction"]` attribute is reused
+simply because it's already on the element, not because it's required:
 
 ```js
 $(`[data-action="incrementReaction"]`).on('click', async function () {

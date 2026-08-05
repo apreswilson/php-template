@@ -36,7 +36,8 @@ conventions, not a virtual DOM.
 - A page/component system where each folder can register and serve its own
   CSS/JS automatically.
 - A tiny client-side `API` helper (`API.post`) for calling back into PHP
-  controller functions from JavaScript, matched to a `data-action` convention.
+  controller functions from JavaScript. How you trigger a call (which
+  element, which event) is entirely up to your own script.
 - A `Database` singleton wrapping PDO with named-parameter binding and
   automatic `RETURNING *` on writes.
 - `.env`-style environment variable loading.
